@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        google()
         mavenLocal()
         jcenter()
     }
@@ -15,5 +16,5 @@ repositories {
 }
 
 dependencies {
-    compile 'com.apptimize:apptimize-android:3.1.1'
+    api 'com.apptimize:apptimize-android:3.1.1'
 }
