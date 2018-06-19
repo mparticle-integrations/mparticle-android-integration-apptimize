@@ -13,6 +13,8 @@ import com.mparticle.MPEvent;
 import com.mparticle.MParticle;
 import com.mparticle.commerce.CommerceEvent;
 import com.mparticle.identity.MParticleUser;
+import com.mparticle.kits_core.KitIntegration;
+import com.mparticle.kits_core.ReportingMessage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ApptimizeKit
-        extends KitIntegration
+        extends AbstractKitIntegration
         implements KitIntegration.AttributeListener,
         KitIntegration.EventListener,
         KitIntegration.CommerceListener,
@@ -44,7 +46,7 @@ public class ApptimizeKit
     }
 
     private ReportingMessage createReportingMessage(final String messageType) {
-        return new ReportingMessage(
+        return new ReportingMessageImpl(
                 this,
                 messageType,
                 System.currentTimeMillis(),
@@ -53,7 +55,7 @@ public class ApptimizeKit
     }
 
     @Override
-    protected List<ReportingMessage> onKitCreate(Map<String, String> settings, Context context) {
+    public List<ReportingMessage> onKitCreate(Map<String, String> settings, Context context) {
         final String appKey = getSettings().get(APP_MP_KEY);
         if (TextUtils.isEmpty(appKey)) {
             throw new IllegalArgumentException(APP_MP_KEY);
@@ -177,7 +179,7 @@ public class ApptimizeKit
     @Override
     public List<ReportingMessage> logout() {
         Apptimize.track(LOGOUT_TAG);
-        return toMessageList(ReportingMessage.logoutMessage(this));
+        return toMessageList(ReportingMessageImpl.logoutMessage(this));
     }
 
     /**
@@ -207,7 +209,7 @@ public class ApptimizeKit
     @Override
     public List<ReportingMessage> logEvent(MPEvent mpEvent) {
         Apptimize.track(mpEvent.getEventName());
-        return toMessageList(ReportingMessage.fromEvent(this, mpEvent));
+        return toMessageList(ReportingMessageImpl.fromEvent(this, mpEvent));
     }
 
     /**
@@ -217,7 +219,7 @@ public class ApptimizeKit
     public List<ReportingMessage> logScreen(String screenName, Map<String, String> eventAttributes) {
         final String event = String.format(VIEWED_EVENT_FORMAT, screenName);
         Apptimize.track(event);
-        return toMessageList(createReportingMessage(ReportingMessage.MessageType.SCREEN_VIEW).setScreenName(screenName));
+        return toMessageList(createReportingMessage(ReportingMessageImpl.MessageType.SCREEN_VIEW).setScreenName(screenName));
     }
 
     /**
@@ -228,7 +230,7 @@ public class ApptimizeKit
     public List<ReportingMessage> logLtvIncrease(BigDecimal valueIncreased, BigDecimal valueTotal, String eventName, Map<String, String> contextInfo) {
         // match the iOS style, where only the delta is sent rather than an absolute final value.
         Apptimize.track(LTV_TAG, valueIncreased.doubleValue());
-        return toMessageList(createReportingMessage(ReportingMessage.MessageType.COMMERCE_EVENT));
+        return toMessageList(createReportingMessage(ReportingMessageImpl.MessageType.COMMERCE_EVENT));
     }
 
     /**
@@ -248,7 +250,7 @@ public class ApptimizeKit
         List<ReportingMessage> ret = null;
         if (optedOut) {
             Apptimize.disable();
-            ret = toMessageList(createReportingMessage(ReportingMessage.MessageType.OPT_OUT).setOptOut(optedOut));
+            ret = toMessageList(createReportingMessage(ReportingMessageImpl.MessageType.OPT_OUT).setOptOut(optedOut));
         }
         return ret;
     }
