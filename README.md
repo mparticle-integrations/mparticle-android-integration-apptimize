@@ -4,15 +4,16 @@ This repository contains the [Apptimize](https://www.apptimize.com/) integration
 
 ### Adding the integration
 
-1. Add the Apptimize's Maven server to your buildscript:
-    
+1. The Apptimize Kit requires that you add Apptimize's Maven server to your buildscript:
+
     ```groovy
     repositories {
-        maven { url 'http://maven.apptimize.com/artifactory/repo' }
+        maven {
+            url 'http://maven.apptimize.com/artifactory/repo'
+        }
     }
     ```
-
-2. Add the kit dependency to your app's build.gradle:
+2. Then, add the kit dependency to your app's build.gradle:
 
     ```groovy
     dependencies {
