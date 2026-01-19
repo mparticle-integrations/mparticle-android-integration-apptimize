@@ -36,6 +36,9 @@ apply plugin: 'com.mparticle.kit'
 
 android {
     namespace 'com.mparticle.kits.apptimize'
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         minSdkVersion 17
     }
