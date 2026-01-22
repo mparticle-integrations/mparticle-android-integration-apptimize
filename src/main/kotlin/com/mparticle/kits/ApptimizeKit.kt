@@ -15,24 +15,25 @@ import com.mparticle.kits.KitIntegration.AttributeListener
 import com.mparticle.kits.KitIntegration.CommerceListener
 import java.math.BigDecimal
 
-class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventListener,
-    CommerceListener, OnTestRunListener {
-    private fun toMessageList(message: ReportingMessage): List<ReportingMessage> {
-        return listOf(message)
-    }
+class ApptimizeKit :
+    KitIntegration(),
+    AttributeListener,
+    KitIntegration.EventListener,
+    CommerceListener,
+    OnTestRunListener {
+    private fun toMessageList(message: ReportingMessage): List<ReportingMessage> = listOf(message)
 
-    private fun createReportingMessage(messageType: String): ReportingMessage {
-        return ReportingMessage(
+    private fun createReportingMessage(messageType: String): ReportingMessage =
+        ReportingMessage(
             this,
             messageType,
             System.currentTimeMillis(),
-            null
+            null,
         )
-    }
 
     override fun onKitCreate(
         settings: Map<String, String>,
-        context: Context
+        context: Context,
     ): List<ReportingMessage> {
         val appKey = getSettings()[APP_MP_KEY]
         require(!TextUtils.isEmpty(appKey)) { APP_MP_KEY }
@@ -59,7 +60,7 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
 
     private fun configureApptimizeUpdateMetaDataTimeout(
         o: ApptimizeOptions,
-        settings: Map<String, String>
+        settings: Map<String, String>,
     ) {
         try {
             settings[UPDATE_METDATA_TIMEOUT_MP_KEY]?.let {
@@ -70,14 +71,17 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
         }
     }
 
-    private fun configureApptimizeDeviceName(o: ApptimizeOptions, settings: Map<String, String>) {
+    private fun configureApptimizeDeviceName(
+        o: ApptimizeOptions,
+        settings: Map<String, String>,
+    ) {
         val v = settings[DEVICE_NAME_MP_KEY]
         o.deviceName = v
     }
 
     private fun configureApptimizeDeveloperModeDisabled(
         o: ApptimizeOptions,
-        settings: Map<String, String>
+        settings: Map<String, String>,
     ) {
         val b = settings[DEVELOPER_MODE_DISABLED_MP_KEY]
         o.isDeveloperModeDisabled = b.toBoolean()
@@ -85,7 +89,7 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
 
     private fun configureApptimizeExplicitEnablingRequired(
         o: ApptimizeOptions,
-        settings: Map<String, String>
+        settings: Map<String, String>,
     ) {
         val b = settings[EXPLICIT_ENABLING_REQUIRED_MP_KEY]
         o.isExplicitEnablingRequired = b.toBoolean()
@@ -93,15 +97,19 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
 
     private fun configureApptimizeMultiprocessModeEnabled(
         o: ApptimizeOptions,
-        settings: Map<String, String>
+        settings: Map<String, String>,
     ) {
         val b = settings[MULTIPROCESS_MODE_ENABLED_MP_KEY]
         o.setMultiprocessMode(b.toBoolean())
     }
 
-    private fun configureApptimizeLogLevel(o: ApptimizeOptions, settings: Map<String, String>) {
+    private fun configureApptimizeLogLevel(
+        o: ApptimizeOptions,
+        settings: Map<String, String>,
+    ) {
         try {
-            val l = settings[LOG_LEVEL_MP_KEY]
+            val l =
+                settings[LOG_LEVEL_MP_KEY]
                     ?.let { ApptimizeOptions.LogLevel.valueOf(it) }
                     ?.let { o.logLevel = it }
         } catch (iae: IllegalArgumentException) {
@@ -111,14 +119,20 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
 
     override fun getName(): String = KIT_NAME
 
-    override fun setUserAttribute(key: String, value: String) {
+    override fun setUserAttribute(
+        key: String,
+        value: String,
+    ) {
         Apptimize.setUserAttribute(key, value)
     }
 
     /**
      * Not supported by the Apptimize kit.
      */
-    override fun setUserAttributeList(key: String, list: List<String>) {
+    override fun setUserAttributeList(
+        key: String,
+        list: List<String>,
+    ) {
         // not supported
     }
 
@@ -129,7 +143,7 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
      */
     override fun setAllUserAttributes(
         attributes: Map<String, String>,
-        attributeLists: Map<String, List<String>>
+        attributeLists: Map<String, List<String>>,
     ) {
         for ((key, value) in attributes) {
             setUserAttribute(key, value)
@@ -143,7 +157,10 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
     /**
      * @param identityType only Alias and CustomerId are suppoted by the Apptimize kit.
      */
-    override fun setUserIdentity(identityType: IdentityType, id: String?) {
+    override fun setUserIdentity(
+        identityType: IdentityType,
+        id: String?,
+    ) {
         when (identityType) {
             IdentityType.Alias, IdentityType.CustomerId -> {
                 Apptimize.setPilotTargetingId(id)
@@ -169,7 +186,10 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
     /**
      * Not supported by the Apptimize kit.
      */
-    override fun logError(s: String, map: Map<String, String>): List<ReportingMessage> = emptyList()
+    override fun logError(
+        s: String,
+        map: Map<String, String>,
+    ): List<ReportingMessage> = emptyList()
 
     /**
      * Not supported by the Apptimize kit.
@@ -177,7 +197,7 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
     override fun logException(
         e: Exception,
         map: Map<String, String>,
-        s: String
+        s: String,
     ): List<ReportingMessage> = emptyList()
 
     override fun logEvent(mpEvent: MPEvent): List<ReportingMessage> {
@@ -190,14 +210,14 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
      */
     override fun logScreen(
         screenName: String,
-        eventAttributes: Map<String, String>
+        eventAttributes: Map<String, String>,
     ): List<ReportingMessage> {
         val event = String.format(VIEWED_EVENT_FORMAT, screenName)
         Apptimize.track(event)
         return toMessageList(
             createReportingMessage(ReportingMessage.MessageType.SCREEN_VIEW).setScreenName(
-                screenName
-            )
+                screenName,
+            ),
         )
     }
 
@@ -209,7 +229,7 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
         valueIncreased: BigDecimal,
         valueTotal: BigDecimal,
         eventName: String,
-        contextInfo: Map<String, String>
+        contextInfo: Map<String, String>,
     ): List<ReportingMessage> {
         // match the iOS style, where only the delta is sent rather than an absolute final value.
         Apptimize.track(LTV_TAG, valueIncreased.toDouble())
@@ -235,14 +255,18 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
         var ret: List<ReportingMessage>? = null
         if (optedOut) {
             Apptimize.disable()
-            ret = toMessageList(
-                createReportingMessage(ReportingMessage.MessageType.OPT_OUT).setOptOut(optedOut)
-            )
+            ret =
+                toMessageList(
+                    createReportingMessage(ReportingMessage.MessageType.OPT_OUT).setOptOut(optedOut),
+                )
         }
         return ret
     }
 
-    override fun onTestRun(apptimizeTestInfo: ApptimizeTestInfo, isFirstTestRun: IsFirstTestRun) {
+    override fun onTestRun(
+        apptimizeTestInfo: ApptimizeTestInfo,
+        isFirstTestRun: IsFirstTestRun,
+    ) {
         if (isFirstTestRun != IsFirstTestRun.YES) {
             return
         }
@@ -267,11 +291,17 @@ class ApptimizeKit : KitIntegration(), AttributeListener, KitIntegration.EventLi
         eventInfo["ID"] = apptimizeTestInfo.testId.toString()
         eventInfo["Name"] = apptimizeTestInfo.testName
         eventInfo["Variation"] = apptimizeTestInfo.enrolledVariantName
-        eventInfo["Name and Variation"] = (apptimizeTestInfo.testName + "-"
-                + apptimizeTestInfo.enrolledVariantName)
-        val event = MPEvent.Builder("Apptimize experiment", MParticle.EventType.Other)
-            .customAttributes(eventInfo)
-            .build()
+        eventInfo["Name and Variation"] =
+            apptimizeTestInfo.testName + "-" +
+            apptimizeTestInfo.enrolledVariantName
+        val event =
+            MPEvent
+                .Builder(
+                    "Apptimize experiment",
+                    MParticle.EventType
+                        .Other,
+                ).customAttributes(eventInfo)
+                .build()
         MParticle.getInstance()?.logEvent(event)
     }
 

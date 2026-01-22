@@ -8,7 +8,7 @@ import org.mockito.Mockito
 
 class ApptimizeKitTests {
     private val kit: KitIntegration
-         get() = ApptimizeKit()
+        get() = ApptimizeKit()
 
     @Test
     @Throws(Exception::class)
